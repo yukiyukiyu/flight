@@ -11,35 +11,62 @@
 |
 */
 
-Route::view('/', 'index');
+Route::group(['middleware' => ['all']], function () {
+    Route::get('/', 'ContentController@index');
 
-Route::view('/register', 'auth.register');
-Route::post('/register', 'AuthController@register');
+    Route::view('/flight', 'flight.index');
+    Route::get('/flight/result', 'FlightController@result');
 
-Route::view('/login', 'auth.login');
-Route::post('/login', 'AuthController@login');
+    Route::get('/announcement/{id}', 'AnnouncementController@announcement');
 
-Route::get('/logout', 'AuthController@logout');
+    Route::group(['middleware' => ['notLogin']], function () {
+        Route::view('/register', 'auth.register');
+        Route::post('/register', 'AuthController@register');
 
-Route::view('/admin', 'admin.index')->middleware('admin');
+        Route::view('/login', 'auth.login');
+        Route::post('/login', 'AuthController@login');
+    });
 
-Route::get('/admin/airports', 'AdminController@airportsPage')->middleware('admin');
-Route::post('/admin/airport/{id}/update', 'AdminController@airportUpdate')->middleware('admin');
-Route::get('/admin/airport/{id}', 'AdminController@airportPage')->middleware('admin');
-Route::post('/admin/airport/add', 'AdminController@airportAdd')->middleware('admin');
+    Route::group(['middleware' => ['login']], function () {
+        Route::get('/logout', 'AuthController@logout');
+        
+        Route::group(['middleware' => ['admin']], function () {
+            Route::view('/admin', 'admin.index');
 
-Route::get('/admin/flights', 'AdminController@flightsPage')->middleware('admin');
-Route::post('/admin/flight/{id}/update', 'AdminController@flightUpdate')->middleware('admin');
-Route::get('/admin/flight/{id}', 'AdminController@flightPage')->middleware('admin');
-Route::post('/admin/flight/add', 'AdminController@flightAdd')->middleware('admin');
+            Route::get('/admin/airports', 'AdminController@airportsPage');
+            Route::post('/admin/airport/{id}/update', 'AdminController@airportUpdate');
+            Route::get('/admin/airport/{id}', 'AdminController@airportPage');
+            Route::redirect('/admin/airport/add', '/admin/airport/0/update');
 
-Route::get('/admin/users', 'AdminController@usersPage')->middleware('admin');
-Route::post('/admin/user/{id}/update', 'AdminController@userUpdate')->middleware('admin');
-Route::get('/admin/user/{id}', 'AdminController@userPage')->middleware('admin');
-Route::post('/admin/user/add', 'AdminController@userAdd')->middleware('admin');
+            Route::get('/admin/flights', 'AdminController@flightsPage');
+            Route::post('/admin/flight/{id}/update', 'AdminController@flightUpdate');
+            Route::get('/admin/flight/{id}', 'AdminController@flightPage');
+            Route::redirect('/admin/flight/add', '/admin/flight/0/update');
 
-Route::view('/flight', 'flight.index');
-Route::get('/flight/result', 'FlightController@result');
+            Route::get('/admin/users', 'AdminController@usersPage');
+            Route::post('/admin/user/{id}/update', 'AdminController@userUpdate');
+            Route::get('/admin/user/{id}', 'AdminController@userPage');
+            Route::redirect('/admin/user/add', '/admin/user/0/update');
 
-Route::get('/personal', 'UserController@personalPage');
-Route::post('/personal/update', 'UserController@personalUpdate');
+            Route::get('/admin/announcements', 'AdminController@announcementsPage');
+            Route::post('/admin/announcement/{id}/update', 'AdminController@announcementUpdate');
+            Route::get('/admin/announcement/{id}', 'AdminController@announcementPage');
+            Route::redirect('/admin/announcement/add', '/admin/announcement/0/update');
+        });
+
+        Route::group(['middleware' => ['passenger']], function () {
+            Route::get('/flight/{id}/buy', 'FlightController@buyPage');
+            Route::post('/flight/{id}/buy', 'FlightController@buy');
+
+            Route::get('/personal', 'UserController@personalPage');
+            Route::post('/personal/update', 'UserController@personalUpdate');
+
+            Route::get('/order/{id}/change', 'OrderController@changePage');
+            Route::post('/order/{id}/change', 'OrderController@change');
+            Route::get('/order/{id}/refund', 'OrderController@refundPage');
+            Route::post('/order/{id}/refund', 'OrderController@refund');
+        });
+    });
+    
+    Route::get('/flight/{id}', 'FlightController@detail');
+});

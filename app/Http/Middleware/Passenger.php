@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Admin
+class Passenger
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->get('user_role') != 0) {
+        if ($request->session()->get('user_role') != 1) {
             return redirect('/');
         }
 

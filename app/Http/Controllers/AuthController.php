@@ -12,13 +12,11 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         if ($request->password != $request->password_confirm) {
-            echo '密码与确认密码不一致！';
-            return;
+            return view('layouts.error', ['message' => '密码与确认密码不一致！']);
         }
 
         if (User::where('username', $request->username)->count() > 0) {
-            echo '用户名已被占用！';
-            return;
+            return view('layouts.error', ['message' => '用户名已被占用！']);
         }
 
         $user = new User;
@@ -34,8 +32,6 @@ class AuthController extends Controller
         $passenger->save();
 
         $request->session()->put('user_id', $user->id);
-        $request->session()->put('user_role', $user->role);
-        $request->session()->put('username', $passenger->name);
 
         return redirect('/personal');
     }
@@ -44,26 +40,16 @@ class AuthController extends Controller
     {
         $users = User::where('username', $request->username);
         if ($users->count() == 0) {
-            echo '用户不存在！';
-            return;
+            return view('layouts.error', ['message' => '用户不存在！']);
         }
 
         $user = $users->first();
 
         if (!Hash::check($request->password, $user->password)) {
-            echo '密码错误！';
-            return;
+            return view('layouts.error', ['message' => '密码错误！']);
         }
 
         $request->session()->put('user_id', $user->id);
-        $request->session()->put('user_role', $user->role);
-        
-        if ($user->role == 0) {
-            $request->session()->put('username', $user->username);
-        } else {
-            $passenger = Passenger::where('user_id', $user->id)->first();
-            $request->session()->put('username', $passenger->name);
-        }
 
         return redirect('/');
     }

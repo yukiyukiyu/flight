@@ -4,7 +4,7 @@
 
 @section('body')
 <div class="form-group">
-    <select class="form-control" onchange="$('#form'+this.value).show();$('#form'+(1-this.value)).hide()">
+    <select class="form-control">
         <option value="0">查询城到城航班</option>
         <option value="1">查询指定航班号</option>
     </select>
@@ -23,7 +23,7 @@
         <button type="submit" class="btn btn-primary">搜索</button>
     </form>
 </div>
-<div id="form1" style="display: none">
+<div id="form1" class="d-none">
     <form action="/flight/result" method="get">
         <input type="hidden" name="type" value="1" />
         <div class="form-group">
@@ -33,4 +33,10 @@
         <button type="submit" class="btn btn-primary">搜索</button>
     </form>
 </div>
+<script>
+    $('select').change(function(){
+        $('#form'+this.value).removeClass('d-none');
+        $('#form'+(1-this.value)).addClass('d-none');
+    })
+</script>
 @endsection

@@ -21,4 +21,5 @@
         @endforeach
     </tbody>
 </table>
+<a href="/admin/airport/add" class="btn btn-primary">添加</a>
 @endsection

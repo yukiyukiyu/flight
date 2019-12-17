@@ -20,7 +20,7 @@
     <tbody>
         @foreach($flights as $flight)
         <tr>
-            <td>{{$flight->flight_number}}</td>
+            <td><a href='/flight/{{$flight->id}}/'>{{$flight->flight_number}}</a></td>
             <td>{{$flight->price}}</td>
             <td>{{$flight->capacity}}</td>
             <td>{{$flight->departureAirport->name}}</td>
@@ -32,4 +32,5 @@
         </tr>
         @endforeach
     </tbody>
-    @endsection
+</table>
+@endsection

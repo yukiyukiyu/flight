@@ -6,7 +6,7 @@
 <form action="/personal/update" method="post">
     @csrf
     <div class="form-group">
-        <label for="password_old">旧密码</label>
+        <label for="password_old">密码</label>
         <input type="password" class="form-control" id="password_old" name="password_old" />
     </div>
     <div class="form-group">
@@ -27,4 +27,29 @@
     </div>
     <button type="submit" class="btn btn-primary">更新</button>
 </form>
+
+订单：
+<table class="table">
+    <thead>
+        <tr>
+            <th>订单号</th>
+            <th>航班</th>
+            <th>出发时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($orders as $order)
+        <tr>
+            <td>{{$order->id}}</td>
+            <td>{{$order->flight->flight_number}}</td>
+            <td>{{$order->flight->departure_time}}</td>
+            <td>
+                <a href="/order/{{$order->id}}/change" class="btn btn-primary">改签</a>
+                <a href="/order/{{$order->id}}/refund" class="btn btn-primary">退票</a>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
 @endsection

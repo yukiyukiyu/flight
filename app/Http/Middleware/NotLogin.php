@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Admin
+class NotLogin
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,10 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->get('user_role') != 0) {
+        if ($request->session()->has('user_id')) {
             return redirect('/');
         }
-
+        
         return $next($request);
     }
 }

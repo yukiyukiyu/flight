@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Airport;
 use App\Flight;
 use App\Admin;
 use App\Passenger;
 use App\Port;
+use App\Announcement;
 
 class AdminController extends Controller
 {
@@ -19,7 +21,18 @@ class AdminController extends Controller
 
     public function userPage($id)
     {
-        return view('admin.user', ['user' => User::find($id), 'passenger' => Passenger::where('user_id', $id)->first()]);
+        $user = User::find($id);
+        if ($id == 0) {
+            $user = new User;
+            $user->id = 0;
+        }
+
+        $passenger = Passenger::where('user_id', $id)->first();
+        if (!is_object($passenger)) {
+            $passenger = new Passenger;
+        }
+
+        return view('admin.user', ['user' => $user, 'passenger' => $passenger]);
     }
 
     public function userUpdate(Request $request, $id)
@@ -28,29 +41,30 @@ class AdminController extends Controller
         Passenger::where('user_id', $id)->delete();
 
         $user = User::find($id);
-        if ($request->password != '') {
-            $user->password=Hash::make($request->password);
+        if ($id == 0) {
+            $user = new User;
         }
-        $user->role=$request->role;
+
+        if ($request->password != '') {
+            $user->password = Hash::make($request->password);
+        }
+        $user->username = $request->username;
+        $user->role = $request->role;
         $user->save();
 
-        if ($user->role==0) {
-            $admin=new Admin;
+        if ($user->role == 0) {
+            $admin = new Admin;
             $admin->user_id = $user->id;
             $admin->save();
         } else {
             $passenger = new Passenger;
             $passenger->user_id = $user->id;
-            $passenger->name=$request->name;
-            $passenger->id_number=$request->id_number;
+            $passenger->name = $request->name;
+            $passenger->id_number = $request->id_number;
             $passenger->save();
         }
 
-        return redirect('/admin/user/'.$id);
-    }
-
-    public function userAdd(Request $request)
-    {
+        return redirect('/admin/user/' . $user->id);
     }
 
     public function airportsPage()
@@ -60,21 +74,27 @@ class AdminController extends Controller
 
     public function airportPage($id)
     {
-        return view('admin.airport', ['airport' => Airport::find($id)]);
+        $airport = Airport::find($id);
+        if ($id == 0) {
+            $airport = new Airport;
+            $airport->id = 0;
+        }
+
+        return view('admin.airport', ['airport' => $airport]);
     }
 
     public function airportUpdate(Request $request, $id)
     {
         $airport = Airport::find($id);
-        $airport->name=$request->name;
-        $airport->city=$request->city;
+        if ($id == 0) {
+            $airport = new Airport;
+        }
+
+        $airport->name = $request->name;
+        $airport->city = $request->city;
         $airport->save();
 
-        return redirect('/admin/airport/'.$id);
-    }
-
-    public function airportAdd(Request $request)
-    {
+        return redirect('/admin/airport/' . $airport->id);
     }
 
     public function flightsPage()
@@ -84,28 +104,75 @@ class AdminController extends Controller
 
     public function flightPage($id)
     {
-        return view('admin.flight', ['flight' => Flight::find($id), 'airports' => Airport::all(), 'ports' => Port::all()]);
+        $flight = Flight::find($id);
+        if ($id == 0) {
+            $flight = new Flight;
+            $flight->id = 0;
+        }
+
+        $airports = Airport::all();
+        if (!is_object($airports)) {
+            $airports = new Airport;
+        }
+
+        $ports = Port::all();
+        if (!is_object($ports)) {
+            $ports = new Port;
+        }
+
+        return view('admin.flight', ['flight' => $flight, 'airports' => $airports, 'ports' => $ports]);
     }
 
     public function flightUpdate(Request $request, $id)
     {
-        $flight = flight::find($id);
-        $flight->flight_number=$request->flight_number;
-        $flight->price=$request->price;
-        $flight->capacity=$request->capacity;
-        $flight->departure_airport_id=$request->departure_airport_id;
-        $flight->port_id=$request->port_id;
-        $flight->departure_time=$request->departure_time;
-        $flight->expected_delay=$request->expected_delay;
-        $flight->arrival_airport_id=$request->arrival_airport_id;
-        $flight->expected_arrival_time=$request->expected_arrival_time;
-        $flight->expected_arrival_delay=$request->expected_arrival_delay;
+        $flight = Flight::find($id);
+        if ($id == 0) {
+            $flight = new Flight;
+        }
+
+        $flight->flight_number = $request->flight_number;
+        $flight->price = $request->price;
+        $flight->capacity = $request->capacity;
+        $flight->departure_airport_id = $request->departure_airport_id;
+        $flight->port_id = $request->port_id;
+        $flight->departure_time = $request->departure_time;
+        $flight->expected_delay = $request->expected_delay;
+        $flight->arrival_airport_id = $request->arrival_airport_id;
+        $flight->expected_arrival_time = $request->expected_arrival_time;
+        $flight->expected_arrival_delay = $request->expected_arrival_delay;
         $flight->save();
 
-        return redirect('/admin/flight/'.$id);
+        return redirect('/admin/flight/' . $flight->id);
     }
 
-    public function flightAdd(Request $request)
+    public function announcementsPage()
     {
+        return view('admin.announcements', ['announcements' => Announcement::all()]);
+    }
+
+
+    public function announcementPage($id)
+    {
+        $announcement = Announcement::find($id);
+        if ($id == 0) {
+            $announcement = new Announcement;
+            $announcement->id = 0;
+        }
+
+        return view('admin.announcement', ['announcement' => $announcement]);
+    }
+
+    public function announcementUpdate(Request $request, $id)
+    {
+        $announcement = Announcement::find($id);
+        if ($id == 0) {
+            $announcement = new Announcement;
+        }
+
+        $announcement->title = $request->title;
+        $announcement->content = $request->content;
+        $announcement->save();
+
+        return redirect('/admin/announcement/' . $announcement->id);
     }
 }

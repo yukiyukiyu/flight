@@ -25,8 +25,7 @@
     </div>
     <div class="form-group">
         <label for="departure_airport_id">出发机场</label>
-        <select class="form-control" id="departure_airport_id" name="departure_airport_id"
-            onchange="$('.departure_port').hide();$('.departure_port_of_'+this.value).show();$('#port_id').val($('.departure_port_of_'+this.value).attr('value'))">
+        <select class="form-control" id="departure_airport_id" name="departure_airport_id">
             @foreach($airports as $airport)
             <option value="{{$airport->id}}" @if ($flight->departure_airport_id==$airport->id) selected
                 @endif>{{$airport->name}}</option>
@@ -37,9 +36,9 @@
         <label for="port_id">登机口</label>
         <select class="form-control" id="port_id" name="port_id">
             @foreach($ports as $port)
-            <option @if ($flight->port_id==$port->id) selected @endif
-                @if($port->airport_id!=$flight->departure_airport_id) style="display: none" @endif value="{{$port->id}}"
-                class="departure_port departure_port_of_{{$port->airport_id}}">{{$port->name}}</option>
+            <option @if ($flight->port_id==$port->id) selected @endif value="{{$port->id}}" class="departure_port
+                departure_port_of_{{$port->airport_id}} @if($port->airport_id!=$flight->departure_airport_id) d-none
+                @endif">{{$port->name}}</option>
             @endforeach
         </select>
     </div>
@@ -74,4 +73,11 @@
     </div>
     <button type="submit" class="btn btn-primary">更新</button>
 </form>
+<script>
+    $('#departure_airport_id').change(function(){
+        $('.departure_port').addClass('d-none');
+        $('.departure_port_of_'+this.value).removeClass('d-none');
+        $('#port_id').val($('.departure_port_of_'+this.value).attr('value'));
+    })
+</script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use App\Flight;
+use App\Order;
 
 class FlightController extends Controller
 {
@@ -27,5 +28,25 @@ class FlightController extends Controller
         }
 
         return view('flight.result', ['flights' => $flights->get()]);
+    }
+
+    public function detail($id)
+    {
+        return view('flight.detail', ['flight' => Flight::find($id)]);
+    }
+
+    public function buyPage($id)
+    {
+        return view('flight.buy', ['flight' => Flight::find($id)]);
+    }
+
+    public function buy(Request $request, $id)
+    {
+        $order = new Order;
+        $order->user_id = $request->session()->get('user_id');
+        $order->flight_id = $id;
+        $order->save();
+
+        return view('flight.buyResult');
     }
 }
