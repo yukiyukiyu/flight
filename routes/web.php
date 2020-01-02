@@ -31,7 +31,7 @@ Route::group(['middleware' => ['all']], function () {
         Route::get('/logout', 'AuthController@logout');
         
         Route::group(['middleware' => ['admin']], function () {
-            Route::view('/admin', 'admin.index');
+            Route::get('/admin', 'AdminController@announcementsPage');
 
             Route::get('/admin/airports', 'AdminController@airportsPage');
             Route::post('/admin/airport/{id}/update', 'AdminController@airportUpdate');
@@ -47,8 +47,7 @@ Route::group(['middleware' => ['all']], function () {
             Route::post('/admin/user/{id}/update', 'AdminController@userUpdate');
             Route::get('/admin/user/{id}', 'AdminController@userPage');
             Route::redirect('/admin/user/add', '/admin/user/0/update');
-
-            Route::get('/admin/announcements', 'AdminController@announcementsPage');
+            
             Route::post('/admin/announcement/{id}/update', 'AdminController@announcementUpdate');
             Route::get('/admin/announcement/{id}', 'AdminController@announcementPage');
             Route::redirect('/admin/announcement/add', '/admin/announcement/0/update');
@@ -59,6 +58,7 @@ Route::group(['middleware' => ['all']], function () {
             Route::post('/flight/{id}/buy', 'FlightController@buy');
 
             Route::get('/personal', 'UserController@personalPage');
+            Route::get('/personal/orders', 'UserController@ordersPage');
             Route::post('/personal/update', 'UserController@personalUpdate');
 
             Route::get('/order/{id}/change', 'OrderController@changePage');

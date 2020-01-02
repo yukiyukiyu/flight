@@ -3,7 +3,7 @@
 @section('title', '登录')
 
 @section('body')
-<div class="row mt-lg-5 align-items-center">
+<div class="row align-items-center">
     <div class="col-0 col-lg-8">
         <p class="h1">欢迎使用飞机订票系统</p>
     </div>

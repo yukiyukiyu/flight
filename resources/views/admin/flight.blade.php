@@ -33,16 +33,6 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="port_id">登机口</label>
-        <select class="form-control" id="port_id" name="port_id">
-            @foreach($ports as $port)
-            <option @if ($flight->port_id==$port->id) selected @endif value="{{$port->id}}" class="departure_port
-                departure_port_of_{{$port->airport_id}} @if($port->airport_id!=$flight->departure_airport_id) d-none
-                @endif">{{$port->name}}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group">
         <label for="departure_time">出发时间</label>
         <input type="datetime-local" class="form-control" id="departure_time" name="departure_time" value="{{date('Y-m-d\TH:i',
             strtotime($flight['departure_time']))}}" />
@@ -74,10 +64,11 @@
     <button type="submit" class="btn btn-primary">更新</button>
 </form>
 <script>
-    $('#departure_airport_id').change(function(){
+    change = function(){
         $('.departure_port').addClass('d-none');
-        $('.departure_port_of_'+this.value).removeClass('d-none');
-        $('#port_id').val($('.departure_port_of_'+this.value).attr('value'));
-    })
+        $('.departure_port_of_'+$('#departure_airport_id').val()).removeClass('d-none');
+    }
+    $(document).ready(change);
+    $('#departure_airport_id').change(change);
 </script>
 @endsection

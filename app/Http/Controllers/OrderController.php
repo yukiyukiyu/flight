@@ -11,8 +11,9 @@ class OrderController extends Controller
 {
     public function changePage($id)
     {
-        $flight = Flight::find($id);
-        return view('order.change', ['order' => Order::find($id), 'flights' => Flight::where('id', '!=', $flight->id)->whereHas('departureAirport', function (Builder $query) use ($flight) {
+        $order = Order::find($id);
+        $flight = Flight::find($order->flight_id);
+        return view('order.change', ['order' => $order, 'flights' => Flight::where('id', '!=', $flight->id)->whereHas('departureAirport', function (Builder $query) use ($flight) {
             $query->where('city', $flight->departureAirport->city);
         })->whereHas('arrivalAirport', function (Builder $query) use ($flight) {
             $query->where('city', $flight->arrivalAirport->city);

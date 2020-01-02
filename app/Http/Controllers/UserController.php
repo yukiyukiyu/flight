@@ -15,6 +15,16 @@ class UserController extends Controller
         return view(
             'user.personal',
             [
+                'passenger' => Passenger::where('user_id', $request->session()->get('user_id'))->first()
+            ]
+        );
+    }
+
+    public function ordersPage(Request $request)
+    {
+        return view(
+            'user.orders',
+            [
                 'passenger' => Passenger::where('user_id', $request->session()->get('user_id'))->first(),
                 'orders' => Order::where('user_id', $request->session()->get('user_id'))->get()
             ]

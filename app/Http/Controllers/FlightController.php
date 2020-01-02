@@ -12,20 +12,14 @@ class FlightController extends Controller
     public function result(Request $request)
     {
         $flights = new Flight;
-        if ($request->type == 0) {
-            if ($request->city1 != '') {
-                $flights = $flights->whereHas('departureAirport', function (Builder $query) use ($request) {
-                    $query->where('city', $request->city1);
-                });
-            }
-            if ($request->city2 != '') {
-                $flights = $flights->whereHas('arrivalAirport', function (Builder $query) use ($request) {
-                    $query->where('city', $request->city2);
-                });
-            }
-        } else {
-            $flights = $flights->where('flight_number', $request->flight_number);
-        }
+        $flights = $flights->whereHas('departureAirport', function (Builder $query) use ($request) {
+            $query->where('city', 'LIKE', '%'.$request->city1.'%');
+        });
+        $flights = $flights->whereHas('arrivalAirport', function (Builder $query) use ($request) {
+            $query->where('city', 'LIKE', '%'.$request->city2.'%');
+        });
+        $flights = $flights->where('flight_number', 'LIKE', '%'.$request->flight_number.'%');
+        $flights = $flights->whereDate('departure_time', $request->departure_date);
 
         return view('flight.result', ['flights' => $flights->get()]);
     }

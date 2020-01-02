@@ -3,6 +3,20 @@
 @section('title', '航班信息管理')
 
 @section('body')
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="/admin">公告管理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/users">用户信息管理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/airports">机场信息管理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/admin/flights">航班信息管理</a>
+    </li>
+</ul>
 <table class="table">
     <thead>
         <tr>
@@ -27,7 +41,6 @@
             <td>{{$flight->price}}</td>
             <td>{{$flight->capacity}}</td>
             <td>{{$flight->departureAirport->name}}</td>
-            <td>{{$flight->port->name}}</td>
             <td>{{$flight->departure_time}}</td>
             <td>{{$flight->expected_delay}}</td>
             <td>{{$flight->arrivalAirport->name}}</td>

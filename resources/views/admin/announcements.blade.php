@@ -3,6 +3,20 @@
 @section('title', '公告管理')
 
 @section('body')
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="/admin">公告管理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/users">用户信息管理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/airports">机场信息管理</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/flights">航班信息管理</a>
+    </li>
+</ul>
 <table class="table">
     <thead>
         <tr>

@@ -42,21 +42,12 @@ class CreateTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('ports', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('airport_id');
-            $table->string('name');
-            $table->string('position');
-            $table->timestamps();
-        });
-
         Schema::create('flights', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('flight_number');
             $table->integer('price');
             $table->integer('capacity');
             $table->integer('departure_airport_id');
-            $table->integer('port_id');
             $table->datetime('departure_time');
             $table->time('expected_delay');
             $table->integer('arrival_airport_id');

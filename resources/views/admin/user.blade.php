@@ -26,7 +26,7 @@
             <option value="1" @if($user->role==1) selected @endif>旅客</option>
         </select>
     </div>
-    <div id="div1" @if($user->role!=1) class="d-none" @endif>
+    <div id="div1">
         <div class="form-group">
             <label for="name">姓名</label>
             <input type="text" class="form-control" id="name" name="name" @if($user->role == 1)
@@ -41,9 +41,11 @@
     <button type=" submit" class="btn btn-primary">更新</button>
 </form>
 <script>
-    $('#role').change(function(){
-        $('#div'+this.value).removeClass('d-none');
-        $('#div'+(1-this.value)).addClass('d-none');
-    })
+    change = function(){
+        $('#div'+$('#role').val()).removeClass('d-none');
+        $('#div'+(1-$('#role').val())).addClass('d-none');
+    }
+    $(document).ready(change);
+    $('#role').change(change);
 </script>
 @endsection

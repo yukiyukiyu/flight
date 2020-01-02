@@ -115,12 +115,7 @@ class AdminController extends Controller
             $airports = new Airport;
         }
 
-        $ports = Port::all();
-        if (!is_object($ports)) {
-            $ports = new Port;
-        }
-
-        return view('admin.flight', ['flight' => $flight, 'airports' => $airports, 'ports' => $ports]);
+        return view('admin.flight', ['flight' => $flight, 'airports' => $airports]);
     }
 
     public function flightUpdate(Request $request, $id)
@@ -134,7 +129,6 @@ class AdminController extends Controller
         $flight->price = $request->price;
         $flight->capacity = $request->capacity;
         $flight->departure_airport_id = $request->departure_airport_id;
-        $flight->port_id = $request->port_id;
         $flight->departure_time = $request->departure_time;
         $flight->expected_delay = $request->expected_delay;
         $flight->arrival_airport_id = $request->arrival_airport_id;
